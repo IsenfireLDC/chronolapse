@@ -80,7 +80,7 @@ class EasyConfig(object):
             self.persist()
 
     def updateBatch(self, section, config, notify=True, persist=True):
-        for key, value in config.iteritems():
+        for key, value in config.items():
             self.update(section, key, value, notify=notify, batch=True)
 
         if persist:
@@ -91,8 +91,9 @@ class EasyConfig(object):
         Writes the config to self._filepath using self._encode. Does
         ZERO exception handling.
         """
-        with open(self._filepath, 'w+b') as f:
-            f.write(self._encode())
+        with open(self._filepath, 'w+') as f: #Was 'w+b'
+            #f.write(self._encode())
+            json.dump(self._config, f)
 
     def _encode(self):
         """
@@ -148,8 +149,8 @@ class EasyConfig(object):
         """
         Calls every callback for its target key if available.
         """
-        for section, keydict in self._callbacks.iteritems():
-            for key, callbacks in keydict.iteritems():
+        for section, keydict in self._callbacks.items():
+            for key, callbacks in keydict.items():
                 if section in self._config and key in self._config[section]:
                     value = self._config[section][key]
                     for callback in callbacks:
